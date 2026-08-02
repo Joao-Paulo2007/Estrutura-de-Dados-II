@@ -1,4 +1,5 @@
 # Estrutura de Dados II
+Exercícios referente as aulas de estruturas de dados II
 
 ## Colaboradores
 
