@@ -20,7 +20,7 @@ Exercícios referente as aulas de estruturas de dados II
     <td align="center">
       <a href="https://github.com/PedroDaMataSantos">
         <img src="https://github.com/PedroDaMataSantos.png" width="80px;" alt="Nome"/><br/>
-        <sub><b>PedroDaMataSantos</b></sub>
+        <sub><b>Pedro da Mata Santos</b></sub>
       </a>
     </td>
      <td align="center">
