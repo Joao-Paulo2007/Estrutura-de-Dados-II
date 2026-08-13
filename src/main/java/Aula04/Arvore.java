@@ -1,24 +1,29 @@
 package Aula04;
 
+import org.w3c.dom.ls.LSOutput;
+
 public class Arvore {
 
-        /**
-         * Função de Rotação Simples à Direita.
-         * Recebe o nó desbalanceado 'y' e promove o filho esquerdo 'x' a nova raiz.
-         */
         public static No rotacionarDireita(No y) {
             No x = y.esquerda;
             No t2 = x.direita;
 
-            // Executa a reestruturação de ponteiros
             x.direita = y;
             y.esquerda = t2;
 
-            // Retorna o nó 'x' como a nova raiz da subárvore
             return x;
         }
 
-        //Método auxiliar para imprimir o percurso em-ordem (E-V-D)
+    public static No rotacionarEsquerda(No y) {
+        No x = y.direita;
+        No t2 = x.esquerda;
+
+        x.esquerda = y;
+        y.direita = t2;
+
+        return x;
+    }
+
         public static void emOrdem(No raiz) {
             if (raiz != null) {
                 emOrdem(raiz.esquerda);
@@ -27,7 +32,6 @@ public class Arvore {
             }
         }
 
-        // Método auxiliar para desenhar a árvore visualmente no console
         public static void exibirArvore(No raiz, String prefixo, boolean ehEsquerda) {
             if (raiz != null) {
                 System.out.println(prefixo + (ehEsquerda ? "├── (E) " : "└── (D) ") + raiz.valor);
@@ -48,14 +52,20 @@ public class Arvore {
              */
 
             No y = new No(30);
-            No x = new No(20);
-            No t2 = new No(25);
+            No x = new No(25);
+            No t2 = new No(26);
 
             y.esquerda = x;
-            y.direita = new No(35);
+            y.direita = new No(80);
 
-            x.esquerda = new No(10);
-            x.direita = t2; // Este nó 't2' mudará de pai durante a rotação
+            x.esquerda = new No(20);
+            x.direita = t2;// Este nó 't2' mudará de pai durante a rotação
+
+            x.esquerda.esquerda = new No(10);
+            x.esquerda.direita = new No(23);
+
+            y.direita.esquerda = new No(50);
+            y.direita.direita = new No(90);
 
             System.out.println("==============================================");
             System.out.println(" 1. ÁRVORE ORIGINAL (Antes da Rotação)");
@@ -85,6 +95,34 @@ public class Arvore {
             exibirArvore(novaRaiz, "", false);
             System.out.print("\nCaminhamento Em-Ordem: ");
             emOrdem(novaRaiz);
+            System.out.println("\n==============================================");
+
+            //Resetando para árvore original, para aplicar a rotação a esquerda.
+            No y2 = new No(30);
+            No x2 = new No(25);
+            No t4 = new No(26);
+
+            y2.esquerda = x2;
+            y2.direita = new No(80);
+
+            x2.esquerda = new No(20);
+            x2.direita = t4;// Este nó 't4' mudará de pai durante a rotação
+
+            x2.esquerda.esquerda = new No(10);
+            x2.esquerda.direita = new No(23);
+
+            y2.direita.esquerda = new No(50);
+            y2.direita.direita = new No(90);
+
+
+            No novaRaiz2 = rotacionarEsquerda(y2);
+
+            System.out.println("==============================================");
+            System.out.println(" 3. ÁRVORE APÓS ROTAÇÃO À ESQUERDA");
+            System.out.println("==============================================");
+            exibirArvore(novaRaiz2, "",false);
+            System.out.println("\nCaminho Em-Ordem: ");
+            emOrdem(novaRaiz2);
             System.out.println("\n==============================================");
         }
 }
