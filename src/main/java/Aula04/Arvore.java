@@ -1,7 +1,5 @@
 package Aula04;
 
-import org.w3c.dom.ls.LSOutput;
-
 public class Arvore {
 
         public static No rotacionarDireita(No y) {
@@ -15,10 +13,14 @@ public class Arvore {
         }
 
     public static No rotacionarEsquerda(No y) {
+
+
         No x = y.direita;
+
         No t2 = x.esquerda;
 
         x.esquerda = y;
+
         y.direita = t2;
 
         return x;
@@ -98,31 +100,16 @@ public class Arvore {
             System.out.println("\n==============================================");
 
             //Resetando para árvore original, para aplicar a rotação a esquerda.
-            No y2 = new No(30);
-            No x2 = new No(25);
-            No t4 = new No(26);
-
-            y2.esquerda = x2;
-            y2.direita = new No(80);
-
-            x2.esquerda = new No(20);
-            x2.direita = t4;// Este nó 't4' mudará de pai durante a rotação
-
-            x2.esquerda.esquerda = new No(10);
-            x2.esquerda.direita = new No(23);
-
-            y2.direita.esquerda = new No(50);
-            y2.direita.direita = new No(90);
 
 
-            No novaRaiz2 = rotacionarEsquerda(y2);
+            No NRaiz = rotacionarEsquerda(novaRaiz);
 
             System.out.println("==============================================");
             System.out.println(" 3. ÁRVORE APÓS ROTAÇÃO À ESQUERDA");
             System.out.println("==============================================");
-            exibirArvore(novaRaiz2, "",false);
+            exibirArvore(NRaiz, "",false);
             System.out.println("\nCaminho Em-Ordem: ");
-            emOrdem(novaRaiz2);
+            emOrdem(NRaiz);
             System.out.println("\n==============================================");
         }
 }
