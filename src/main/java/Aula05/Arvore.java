@@ -1,6 +1,7 @@
 package Aula05;
 
 public class Arvore {
+    Balanceamento balanceamento = new Balanceamento();
 
     // Método para adicionar itens na árvore
     public No adicionar(No no, int valor) {
@@ -11,150 +12,35 @@ public class Arvore {
         // Adicionar à esquerda
         if (valor < no.getValor()) no.setEsquerda(adicionar(no.getEsquerda(), valor));
 
-            // Adicionar à direita
+        // Adicionar à direita
         else if (valor > no.getValor()) no.setDireita(adicionar(no.getDireita(), valor));
 
-            // Valor repetido
+        // Valor repetido
         else return no;
 
         // Atualiza a altura do nó
-        no.setAltura(1 + Math.max(altura(no.getEsquerda()), altura(no.getDireita())));
+        no.setAltura(balanceamento.calcularAltura(no));
 
         // Verifica e corrige o balanceamento
-        return balancearArvore(no);
+        return balanceamento.balancearArvore(no);
     }
 
-    // Balancear árvore AVL
-    public No balancearArvore(No no) {
-        int fator = fatorBalanceamento(no);
 
-        // Caso esquerda-esquerda
-        if (fator > 1 && fatorBalanceamento(no.getEsquerda()) >= 0) return rotacaoDireita(no);
-
-        // Caso esquerda-direita
-        if (fator > 1 && fatorBalanceamento(no.getEsquerda()) < 0) {
-            no.setEsquerda(rotacaoEsquerda(no.getEsquerda()));
-            return rotacaoDireita(no);
-        }
-
-        // Caso direita-direita
-        if (fator < -1 && fatorBalanceamento(no.getDireita()) <= 0) return rotacaoEsquerda(no);
-
-        // Caso direita-esquerda
-        if (fator < -1 && fatorBalanceamento(no.getDireita()) > 0) {
-            no.setDireita(rotacaoDireita(no.getDireita()));
-            return rotacaoEsquerda(no);
-        }
-
-        // Já está balanceada
-        return no;
+    // Método principal para exibir a árvore
+    public void exibirArvore(No no) {
+        exibirArvoreRec(no, "", "Raiz");
     }
 
-    // Rotação simples para a direita
-    private No rotacaoDireita(No no) {
+    // Método auxiliar recursivo simples
+    private void exibirArvoreRec(No no, String espaco, String direcao) {
+        if (no == null) return;
 
-        No novaRaiz = no.getEsquerda();
-        No subArvore = novaRaiz.getDireita();
+        // Imprime o nó atual mostrando se é Raiz, Esquerda (E) ou Direita (D)
+        System.out.println(espaco + "[" + direcao + "] " + no.getValor());
 
-        novaRaiz.setDireita(no);
-        no.setEsquerda(subArvore);
-
-        // Atualiza as alturas
-        no.setAltura(1 + Math.max(altura(no.getEsquerda()), altura(no.getDireita())));
-
-        novaRaiz.setAltura(1 + Math.max(altura(novaRaiz.getEsquerda()), altura(novaRaiz.getDireita())));
-
-        return novaRaiz;
-    }
-
-    // Rotação simples para a esquerda
-    private No rotacaoEsquerda(No no) {
-
-        No novaRaiz = no.getDireita();
-        No subArvore = novaRaiz.getEsquerda();
-
-        novaRaiz.setEsquerda(no);
-        no.setDireita(subArvore);
-
-        // Atualiza as alturas
-        no.setAltura(1 + Math.max(altura(no.getEsquerda()), altura(no.getDireita())));
-
-        novaRaiz.setAltura(1 + Math.max(altura(novaRaiz.getEsquerda()), altura(novaRaiz.getDireita())));
-
-        return novaRaiz;
-    }
-
-    // Calcular a altura da árvore
-    public int altura(No no) {
-
-        if (no == null) return 0;
-
-        return no.getAltura();
-    }
-
-    // Achar o fator de balanceamento (Para estar balanceada: -1, 0 ou 1)
-    public int fatorBalanceamento(No no) {
-
-        if (no == null) return 0;
-
-        return altura(no.getEsquerda()) - altura(no.getDireita());
-    }
-
-    // Auxiliar recursivo para formatar os galhos
-    public void exibirArvore(No raiz) {
-        int h = altura(raiz);
-        if (h == 0) return;
-
-        java.util.List<No> nivelAtual = new java.util.ArrayList<>();
-        nivelAtual.add(raiz);
-
-        int larguraMax = (int) Math.pow(2, h) * 3;
-
-        for (int nivel = 1; nivel <= h; nivel++) {
-            java.util.List<No> proximoNivel = new java.util.ArrayList<>();
-            int espacosAntes = (int) Math.pow(2, h - nivel + 1) - 1;
-            int espacosEntre = (int) Math.pow(2, h - nivel + 2) - 1;
-
-            // Imprime os valores dos nós
-            imprimirEspacos(espacosAntes);
-            for (No no : nivelAtual) {
-                if (no != null) {
-                    System.out.printf("%2d", no.getValor());
-                    proximoNivel.add(no.getEsquerda());
-                    proximoNivel.add(no.getDireita());
-                } else {
-                    System.out.print("  ");
-                    proximoNivel.add(null);
-                    proximoNivel.add(null);
-                }
-                imprimirEspacos(espacosEntre - 1);
-            }
-            System.out.println();
-
-            // Imprime as ramificações (/ \)
-            if (nivel < h) {
-                imprimirEspacos(espacosAntes - 1);
-                for (No no : nivelAtual) {
-                    if (no != null && no.getEsquerda() != null) System.out.print("/");
-                    else System.out.print(" ");
-
-                    imprimirEspacos(1);
-
-                    if (no != null && no.getDireita() != null) System.out.print("\\");
-                    else System.out.print(" ");
-
-                    imprimirEspacos(espacosEntre - 2);
-                }
-                System.out.println();
-            }
-            nivelAtual = proximoNivel;
-        }
-    }
-
-    private void imprimirEspacos(int quantidade) {
-        for (int i = 0; i < quantidade; i++) {
-            System.out.print(" ");
-        }
+        // Percorre a esquerda e a direita aumentando o espaçamento
+        exibirArvoreRec(no.getEsquerda(), espaco + "   ", "E");
+        exibirArvoreRec(no.getDireita(), espaco + "   ", "D");
     }
 
     // Remover um valor da árvore
@@ -169,6 +55,7 @@ public class Arvore {
 
             if (no.getEsquerda() == null) return no.getDireita();
 
+
             if (no.getDireita() == null) return no.getEsquerda();
 
             No sucessor = menorValor(no.getDireita());
@@ -179,9 +66,9 @@ public class Arvore {
 
         }
 
-        no.setAltura(1 + Math.max(altura(no.getEsquerda()), altura(no.getDireita())));
+        no.setAltura(balanceamento.calcularAltura(no));
 
-        return balancearArvore(no);
+        return balanceamento.balancearArvore(no);
     }
 
     public No menorValor(No no) {
