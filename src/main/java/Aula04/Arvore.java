@@ -24,22 +24,64 @@ public class Arvore {
         return balanceamento.balancearArvore(no);
     }
 
+    public void exibirArvore(No raiz) {
+        int h = balanceamento.altura(raiz) + 1;
+        if (h <= 0) return;
 
-    // Metodo principal para exibir a árvore
-    public void exibirArvore(No no) {
-        exibirArvoreRec(no, "", "Raiz");
+        java.util.List<No> nivelAtual = new java.util.ArrayList<>();
+        nivelAtual.add(raiz);
+
+        for (int nivel = 1; nivel <= h; nivel++) {
+            java.util.List<No> proximoNivel = new java.util.ArrayList<>();
+            int espacosAntes = (int) Math.pow(2, h - nivel + 1) - 2;
+            int espacosEntre = (int) Math.pow(2, h - nivel + 2) - 1;
+
+            // Imprime os nós
+            imprimirEspacos(Math.max(0, espacosAntes));
+            for (No no : nivelAtual) {
+                if (no != null) {
+                    System.out.printf("%2d", no.getValor());
+                    proximoNivel.add(no.getEsquerda());
+                    proximoNivel.add(no.getDireita());
+                } else {
+                    System.out.print("  ");
+                    proximoNivel.add(null);
+                    proximoNivel.add(null);
+                }
+                imprimirEspacos(Math.max(0, espacosEntre - 1));
+            }
+            System.out.println();
+
+            // Imprime as conexões (/ \)
+            if (nivel < h) {
+                imprimirEspacos(Math.max(0, espacosAntes));
+                for (No no : nivelAtual) {
+                    if (no != null && no.getEsquerda() != null) {
+                        System.out.print("/");
+                    } else {
+                        System.out.print(" ");
+                    }
+
+                    imprimirEspacos(1);
+
+                    if (no != null && no.getDireita() != null) {
+                        System.out.print("\\");
+                    } else {
+                        System.out.print(" ");
+                    }
+
+                    imprimirEspacos(Math.max(0, espacosEntre - 3));
+                }
+                System.out.println();
+            }
+            nivelAtual = proximoNivel;
+        }
     }
 
-    // Metodo auxiliar recursivo simples
-    private void exibirArvoreRec(No no, String espaco, String direcao) {
-        if (no == null) return;
-
-        // Imprime o nó atual mostrando se é Raiz, Esquerda (E) ou Direita (D)
-        System.out.println(espaco + "[" + direcao + "] " + no.getValor());
-
-        // Percorre a esquerda e a direita aumentando o espaçamento
-        exibirArvoreRec(no.getEsquerda(), espaco + "   ", "E");
-        exibirArvoreRec(no.getDireita(), espaco + "   ", "D");
+    private void imprimirEspacos(int quantidade) {
+        for (int i = 0; i < quantidade; i++) {
+            System.out.print(" ");
+        }
     }
 
     // Remove um elemento mantendo a ordenação e o balanceamento
