@@ -35,3 +35,12 @@ Exercícios referente as aulas de estruturas de dados II
         <img src="https://github.com/Scarcela13.png" width="80px;" alt="Nome"/><br/>
         <sub><b>Guilherme Scarcela</b></sub>
       </a>
+     </td>
+     <td align="center">
+      <a href="https://github.com/gioosfc">
+        <img src="https://github.com/gioosfc.png" width="80px;" alt="Nome"/><br/>
+        <sub><b> Giovanna Alice</b></sub>
+      </a>
+    </td>
+<table>
+  <tr>
