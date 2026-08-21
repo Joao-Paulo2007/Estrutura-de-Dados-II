@@ -1,4 +1,4 @@
-package Aula03;
+package Aula02.atividade;
 
 public class Exercicio02 {
     Exercicio01 ex1 = new Exercicio01();

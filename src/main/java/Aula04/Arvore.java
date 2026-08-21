@@ -1,115 +1,81 @@
 package Aula04;
 
 public class Arvore {
+    Balanceamento balanceamento = new Balanceamento();
 
-        public static No rotacionarDireita(No y) {
-            No x = y.esquerda;
-            No t2 = x.direita;
+    // Metodo para adicionar itens na árvore
+    public No adicionar(No no, int valor) {
 
-            x.direita = y;
-            y.esquerda = t2;
+        // Se a árvore estiver vazia, o novo nó torna-se a raiz
+        if (no == null) return new No(valor);
 
-            return x;
-        }
+        // Adicionar à esquerda
+        if (valor < no.getValor()) no.setEsquerda(adicionar(no.getEsquerda(), valor));
+        // Adicionar à direita
+        else if (valor > no.getValor()) no.setDireita(adicionar(no.getDireita(), valor));
 
-    public static No rotacionarEsquerda(No y) {
+        // Valor repetido
+        else return no;
 
+        // Atualiza a altura do nó
+        no.setAltura(balanceamento.calcularAltura(no));
 
-        No x = y.direita;
-
-        No t2 = x.esquerda;
-
-        x.esquerda = y;
-
-        y.direita = t2;
-
-        return x;
+        // Verifica e corrige o balanceamento
+        return balanceamento.balancearArvore(no);
     }
 
-        public static void emOrdem(No raiz) {
-            if (raiz != null) {
-                emOrdem(raiz.esquerda);
-                System.out.print(raiz.valor + " ");
-                emOrdem(raiz.direita);
-            }
+
+    // Metodo principal para exibir a árvore
+    public void exibirArvore(No no) {
+        exibirArvoreRec(no, "", "Raiz");
+    }
+
+    // Metodo auxiliar recursivo simples
+    private void exibirArvoreRec(No no, String espaco, String direcao) {
+        if (no == null) return;
+
+        // Imprime o nó atual mostrando se é Raiz, Esquerda (E) ou Direita (D)
+        System.out.println(espaco + "[" + direcao + "] " + no.getValor());
+
+        // Percorre a esquerda e a direita aumentando o espaçamento
+        exibirArvoreRec(no.getEsquerda(), espaco + "   ", "E");
+        exibirArvoreRec(no.getDireita(), espaco + "   ", "D");
+    }
+
+    // Remove um elemento mantendo a ordenação e o balanceamento
+    public No remover(No no, int valor) {
+        // Caso base: valor não encontrado
+        if (no == null) return null;
+
+        // Busca o nó a ser removido recursivamente
+        if (valor < no.getValor()) no.setEsquerda(remover(no.getEsquerda(), valor));
+        else if (valor > no.getValor()) no.setDireita(remover(no.getDireita(), valor));
+
+            // Nó encontrado. Trata a exclusão pelos 3 casos
+        else {
+            // Caso 1 e 2: Sem filho à esquerda (retorna o direito ou null)
+            if (no.getEsquerda() == null) return no.getDireita();
+
+            // Caso 1 e 2: Sem filho à direita (retorna o esquerdo)
+            if (no.getDireita() == null) return no.getEsquerda();
+
+            // Caso 3: Nó possui 2 filhos
+            No sucessor = menorValor(no.getDireita());                     // Busca o menor nó da subárvore direita
+            no.setValor(sucessor.getValor());                               // Substitui o valor do nó pelo valor do sucessor
+            no.setDireita(remover(no.getDireita(), sucessor.getValor()));   // Deleta o nó sucessor duplicado
         }
 
-        public static void exibirArvore(No raiz, String prefixo, boolean ehEsquerda) {
-            if (raiz != null) {
-                System.out.println(prefixo + (ehEsquerda ? "├── (E) " : "└── (D) ") + raiz.valor);
-                exibirArvore(raiz.esquerda, prefixo + (ehEsquerda ? "│   " : "    "), true);
-                exibirArvore(raiz.direita, prefixo + (ehEsquerda ? "│   " : "    "), false);
-            }
-        }
+        // Atualiza a altura após a remoção
+        no.setAltura(balanceamento.calcularAltura(no));
 
-        public static void main(String[] args) {
-            /*
-             * Montando manualmente a seguinte árvore desbalanceada à esquerda:
-             *
-             *          30 (y)
-             *         /  \
-             *       20(x) 35
-             *      /  \
-             *    10    25 (t2)
-             */
+        // Aplica as rotações para rebalancear caso necessário
+        return balanceamento.balancearArvore(no);
+    }
 
-            No y = new No(30);
-            No x = new No(25);
-            No t2 = new No(26);
+    // Encontra o menor valor a partir de um nó (caminha totalmente para a esquerda)
+    public No menorValor(No no) {
+        while (no.getEsquerda() != null) no = no.getEsquerda();
 
-            y.esquerda = x;
-            y.direita = new No(80);
-
-            x.esquerda = new No(20);
-            x.direita = t2;// Este nó 't2' mudará de pai durante a rotação
-
-            x.esquerda.esquerda = new No(10);
-            x.esquerda.direita = new No(23);
-
-            y.direita.esquerda = new No(50);
-            y.direita.direita = new No(90);
-
-            System.out.println("==============================================");
-            System.out.println(" 1. ÁRVORE ORIGINAL (Antes da Rotação)");
-            System.out.println("==============================================");
-            exibirArvore(y, "", false);
-            System.out.print("\nCaminhamento Em-Ordem: ");
-            emOrdem(y);
-            System.out.println("\n");
-
-            // Executa a Rotação à Direita passando a raiz 'y'
-            No novaRaiz = rotacionarDireita(y);
-
-            /*
-             * Estrutura esperada após a rotação:
-             *
-             *          20 (x)
-             *         /  \
-             *       10    30 (y)
-             *            /  \
-             *          25    35
-             *         (t2)
-             */
-
-            System.out.println("==============================================");
-            System.out.println(" 2. ÁRVORE APÓS ROTAÇÃO À DIREITA");
-            System.out.println("==============================================");
-            exibirArvore(novaRaiz, "", false);
-            System.out.print("\nCaminhamento Em-Ordem: ");
-            emOrdem(novaRaiz);
-            System.out.println("\n==============================================");
-
-            //Resetando para árvore original, para aplicar a rotação a esquerda.
-
-
-            No NRaiz = rotacionarEsquerda(novaRaiz);
-
-            System.out.println("==============================================");
-            System.out.println(" 3. ÁRVORE APÓS ROTAÇÃO À ESQUERDA");
-            System.out.println("==============================================");
-            exibirArvore(NRaiz, "",false);
-            System.out.println("\nCaminho Em-Ordem: ");
-            emOrdem(NRaiz);
-            System.out.println("\n==============================================");
-        }
+        return no;
+    }
 }

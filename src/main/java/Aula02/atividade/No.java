@@ -1,25 +1,15 @@
-package Aula05;
+package Aula02.atividade;
 
 public class No {
-
     private int valor;
-    private No direita;
-    private No esquerda;
-    private int altura;
+    private No direita, esquerda;
 
     public No(int valor) {
         this.valor = valor;
-        this.direita = null;
-        this.esquerda = null;
-        this.altura = 1;
     }
 
     public int getValor() {
         return valor;
-    }
-
-    public void setValor(int valor) {
-        this.valor = valor;
     }
 
     public No getDireita() {
@@ -36,13 +26,5 @@ public class No {
 
     public void setEsquerda(No esquerda) {
         this.esquerda = esquerda;
-    }
-
-    public int getAltura() {
-        return altura;
-    }
-
-    public void setAltura(int altura) {
-        this.altura = altura;
     }
 }

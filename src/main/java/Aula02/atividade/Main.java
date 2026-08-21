@@ -1,4 +1,4 @@
-package Aula03;
+package Aula02.atividade;
 
 public class Main {
     public static void main(String[] args) {

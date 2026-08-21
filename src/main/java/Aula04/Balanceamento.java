@@ -1,4 +1,4 @@
-package Aula05;
+package Aula04;
 
 public class Balanceamento {
     // Balancear árvore AVL
@@ -64,7 +64,7 @@ public class Balanceamento {
     // Verificar se o No é nulo
     public int altura(No no) {
 
-        if (no == null) return 0;
+        if (no == null) return -1;
         return no.getAltura();
     }
 
